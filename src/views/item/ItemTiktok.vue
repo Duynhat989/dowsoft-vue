@@ -1,0 +1,117 @@
+
+<script setup>
+import {
+    languagePack,
+    setLanguage,
+    LangList,
+    localtionsLang,
+} from "../../languages/index";
+import { ref,  reactive,onMounted } from "vue";
+import { defineProps, defineEmits } from 'vue';
+const { data } = defineProps(['data']);
+const dat = ref(null)
+dat.value = data.value
+onMounted(()=>{
+    var downloads = document.querySelectorAll('.download');
+    downloads.forEach(element => {
+    element.addEventListener('click', () => {
+        const url = element.dataset.url;
+        
+        // Sử dụng fetch để tải dữ liệu từ URL
+        fetch(url)
+            .then(response => response.blob()) // Chuyển dữ liệu thành Blob
+            .then(blob => {
+                const fileUrl = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = fileUrl;
+                a.download = element.dataset.title;; // Đặt tên tệp tải xuống
+
+                a.click();
+                
+                URL.revokeObjectURL(fileUrl);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+});
+
+})
+</script>
+<template>
+    <div class="item" v-if="dat">
+        <div class="item_content flex">
+            <div class="logo flex">
+                <img style="max-height: 100px;object-fit: contain;" :src="dat.data.video.cover.url_list[0]" alt="image avata" class="logo_show">
+            </div>
+            <div class="content">
+                <h3>{{ dat.data.desc }}</h3>
+                <div class="lst flex">
+                    <a
+                            target="_blank"
+                            class="download"
+                            :data-url="dat.url"
+                            :data-title="dat.id"
+                    >
+                        <span ><i class='bx bxs-arrow-to-bottom' ></i> <span>{{ `${languagePack["[DOWNLOAD]"]} MP4` }}</span></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<style scoped>
+span i {
+    font-size: 20px;
+}
+.flex{
+    display: flex;
+}
+.logo_show{
+    width: 100%;
+    height: auto;
+
+}
+.item{
+    color: #20223a;
+    padding: 15px;
+    width: 95%;
+    max-width: 1000px;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+}
+.logo{
+    width: 150px;
+    align-items: center;
+}
+.content{
+    padding: 5px;
+    width: calc(100% - 150px);
+    text-align: start;
+    padding-left: 15px;
+}
+.content span{
+}
+.download{
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    background-color: #20223a;
+    margin-right: 5px;
+    margin-top: 5px;
+    display: block;
+    width: 150px;
+}
+.lst{
+
+}
+.description{
+    display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1; /* Số dòng cố định */
+}
+</style>
