@@ -12,8 +12,20 @@ async function closeLogin(){
   async function openLogin(){
     isShowLogin.value = true
   }
-</script>
 
+await getlocation()
+async function getlocation(){
+    let locations = JSON.parse(localStorage.getItem("locations")) || null;
+    if (locations == null) {
+      const result = await languagesLocation();
+      locations = {
+        language: result.country
+      };
+      localStorage.setItem("locations", JSON.stringify(locations));
+      location.reload()
+    }
+}
+</script>
 <template>
   <HeaderVue :openLogin="openLogin"/>
   <RouterView />
