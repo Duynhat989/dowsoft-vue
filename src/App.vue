@@ -13,7 +13,7 @@ async function closeLogin(){
     isShowLogin.value = true
   }
 
-await getlocation()
+getlocation()
 async function getlocation(){
     let locations = JSON.parse(localStorage.getItem("locations")) || null;
     if (locations == null) {
@@ -24,6 +24,16 @@ async function getlocation(){
       localStorage.setItem("locations", JSON.stringify(locations));
       location.reload()
     }
+}
+async function languagesLocation() {
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow'
+  };
+  
+  var response = await fetch("https://api.country.is/", requestOptions);
+  var result = await response.json();
+  return result;
 }
 </script>
 <template>
